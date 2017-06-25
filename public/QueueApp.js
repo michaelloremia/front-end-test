@@ -1,6 +1,5 @@
-(function () {
 
-	angular.module('qudini.QueueApp', [])
+	angular.module('QueueApp', [])
 		.controller('QueueController', QueueController);
 
 	QueueController.$inject = ['$scope', '$http'];
@@ -43,5 +42,3 @@
 		}
 
 	}
-
-})();

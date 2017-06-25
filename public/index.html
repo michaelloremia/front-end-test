@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="QueueApp">
 	<head lang="en">
 		<meta charset="UTF-8">
 		<title>Queue App</title>
@@ -8,7 +8,7 @@
 		<script src="/add-customer/AddCustomer.js"></script>
 		<script src="/customer/Customer.js"></script>
 	</head>
-	<body ng-app="qudini.QueueApp" ng-controller="QueueController">
+	<body ng-controller="QueueController as queue">
 
 		<h2>Add Customer</h2>
 		<add-customer on-added="onCustomerAdded()"></add-customer>

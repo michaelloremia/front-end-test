@@ -17,7 +17,8 @@
 			scope: {
 				customer: '=',
 				onRemoved: '&',
-				onServed: '&'
+				onServed: '&',
+				isServed: '='
 			},
 			templateUrl: '/customer/customer.html',
 			link: function (scope) {

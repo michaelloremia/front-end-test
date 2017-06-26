@@ -26,9 +26,16 @@
 						product: scope.product
 					}).then(function () {
 						scope.onAdded();
+						_clearField();
+					}, function (err) {
+						console.log(err.data);
 					});
 				};
 
+				function _clearField() {
+					scope.name = '';
+					scope.product = {};
+				}
 			}
 		}
 	};

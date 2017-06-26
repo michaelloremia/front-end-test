@@ -15,15 +15,15 @@ var servedCustomers = [
 ];
 
 function serveCustomer(id) {
-	customers = customers.filter(function (customer) {
-		if (customer.id === id) {
-			customer.status = 'served';
-			servedCustomers.push(customer);
-			return false;
-		} else {
-			return true;
-		}
-	});
+	// always serve the first in the queue
+	if (customers.length === 0) {
+		console.log("All customer has been served, customer queue is empty");
+		return 'All customer has been served!';
+	}
+
+	var _servedCustomer = customers.shift();
+	servedCustomers.push(_servedCustomer);
+	return 'Customer was served!';
 }
 
 function addCustomer(customer) {
@@ -37,7 +37,18 @@ function removeCustomer(targetCustomerId) {
 	});
 }
 
+function constructSSE(res, data, event = 'queueUpdate') {
+	res.write('id: ' + uuid.v4() + '\n');
+	res.write('event: ' + event + '\n');
+	res.write("data: " + JSON.stringify(data) + '\n\n');
+}
+
+function sendQueueUpdate() {
+	constructSSE(queueConnection, {customers, servedCustomers}, 'queueUpdate');
+}
+
 var app = express();
+var queueConnection;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -47,23 +58,50 @@ app.get('/api/customers', function (req, res) {
 app.get('/api/customers/served', function (req, res) {
 	res.send(servedCustomers);
 });
-app.post('/api/customer/add', function (req, res) {
-	addCustomer(req.body);
-	res.end('Customer was added!');
+app.post('/api/customer/add', function (req, res, next) {
+	if (req.body.name && req.body.product && req.body.product.name) {
+		addCustomer(req.body);
+		sendQueueUpdate();
+		res.end('Customer was added!');
+		return;
+	}
+	next({error: {message: 'Missing required field!'}});
 });
 app.put('/api/customer/serve', function (req, res) {
-	serveCustomer(req.body.id);
-	res.end('Customer was served!');
+	var customerStatus = serveCustomer();
+	sendQueueUpdate();
+	res.end(customerStatus);
 });
 app.delete('/api/customer/remove', function (req, res) {
 	removeCustomer(req.query.id);
+	sendQueueUpdate();
 	res.end('Customer was removed!');
+});
+
+app.get('/api/queue-stream', function (req, res) {
+	res.writeHead(200, {
+      'Connection': 'keep-alive',
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache'
+    });
+	queueConnection = res;
+	constructSSE(queueConnection, {connection: 1, customers, servedCustomers}, 'connection');
+	res.end();
 });
 
 app.use(function (req, res) {
 	req.addListener('end', function () {
 		fileServer.serve(req, res);
 	}).resume();
+});
+
+app.use(function (err, req, res, next) {
+	if (!err.error) {
+		next(err); //let it pass, not known
+	}
+	error = err.error;
+	console.error(error.message);
+  	res.status(500).send(error.message);
 });
 
 app.listen(1337);

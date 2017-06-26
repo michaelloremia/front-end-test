@@ -1,6 +1,14 @@
 <div>
-	<span>{{ customer.name }}</span>
-	<span>{{ customer.product.name }}</span>
-	<span>{{ customer.queuedTime }}</span>
-	<button ng-click="remove()" ng-if="!isServed">Remove</button>
+	<md-card-title>
+		<md-card-title-text>
+			<span class="md-headline">{{ customer.name }}</span>
+			<span class="md-subhead">{{ customer.product.name }}</span>
+		</md-card-title-text>
+	</md-card-title>
+	<md-card-content>
+		<queue-timer date-joined="customer.joinedTime"></queue-timer>
+	</md-card-content>
+	<md-card-actions layout="row" layout-align="end center">
+		<md-button class="md-warn" ng-click="remove()" ng-if="!isServed" aria-label="Remove">Remove</md-button>
+	</md-card-actions>
 </div>

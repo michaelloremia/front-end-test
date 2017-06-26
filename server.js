@@ -101,7 +101,6 @@ app.get('/api/queue-stream', function (req, res) {
 	constructSSE({connection: 1, customers, servedCustomers}, 'connection');
 
 	req.on('close', function() {
-		console.log('A connection closed...');
 		queueStreamEnd(res);
 	});
 });

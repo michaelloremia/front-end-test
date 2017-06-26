@@ -1,5 +1,5 @@
 
-	angular.module('QueueApp', [])
+	angular.module('QueueApp', ['ngMaterial'])
 		.controller('QueueController', QueueController);
 
 	QueueController.$inject = ['$scope', '$http', '$timeout'];

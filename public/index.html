@@ -2,30 +2,36 @@
 <html ng-app="QueueApp">
 	<head lang="en">
 		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 		<title>Queue App</title>
+    	<link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<script src="/bower_components/angularjs/angular.js"></script>
+		<script src="/bower_components/angular-aria/angular-aria.js"></script>
+		<script src="/bower_components/angular-animate/angular-animate.js"></script>
+		<script src="/bower_components/angular-material/angular-material.js"></script>
 		<script src="/QueueApp.js"></script>
 		<script src="/add-customer/AddCustomer.js"></script>
 		<script src="/customer/Customer.js"></script>
+		<script src="/queueTimer/QueueTimer.js"></script>
 	</head>
 	<body ng-controller="QueueController as queue">
+		<md-content class="md-padding" layout-xs="column" layout="column">
+			<h2>Add Customer</h2>
+			<add-customer on-added="queue.onCustomerAdded()"></add-customer>
 
-		<h2>Add Customer</h2>
-		<add-customer on-added="queue.onCustomerAdded()"></add-customer>
-
-		<h2>Queueing Customers <button ng-click="queue.serveCustomer()">Serve!</button></h2>
-		<ul>
-			<li ng-repeat="customer in queue.customers">
-				<customer customer="customer" on-served="queue.onCustomerServed()" on-removed="queue.onCustomerRemoved()"></customer>
-			</li>
-		</ul>
-
-		<h2>Served customers</h2>
-		<ul>
-			<li ng-repeat="customer in queue.servedCustomers">
-				<customer customer="customer" on-served="queue.onCustomerServed()" is-served="true"></customer>
-			</li>
-		</ul>
-
+			<h2>Queueing Customers <button ng-click="queue.serveCustomer()">Serve!</button></h2>
+			<div flex="66" layout="column">
+				<md-card flex-m ng-repeat="customer in queue.customers">
+					<customer customer="customer" on-served="queue.onCustomerServed()" on-removed="queue.onCustomerRemoved()"></customer>
+				</md-card>
+			</div>
+			<h2>Served customers</h2>
+			<ul>
+				<li ng-repeat="customer in queue.servedCustomers">
+					<customer customer="customer" on-served="queue.onCustomerServed()" is-served="true"></customer>
+				</li>
+			</ul>
+		</md-content>
 	</body>
 </html>

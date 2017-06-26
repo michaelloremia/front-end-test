@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://github.com/qudini/front-end-test#readme",
   "dependencies": {
-    "angularjs": "^1.6"
+    "angularjs": "^1.6",
+    "angular-material": "^1.1.4"
   }
 }

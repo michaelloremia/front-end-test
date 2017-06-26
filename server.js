@@ -62,6 +62,7 @@ app.post('/api/customer/add', function (req, res, next) {
 	if (req.body.name && req.body.product && req.body.product.name) {
 		addCustomer(req.body);
 		sendQueueUpdate();
+		res.type("text/plain");
 		res.end('Customer was added!');
 		return;
 	}
@@ -75,6 +76,7 @@ app.put('/api/customer/serve', function (req, res) {
 app.delete('/api/customer/remove', function (req, res) {
 	removeCustomer(req.query.id);
 	sendQueueUpdate();
+	res.type("text/plain");
 	res.end('Customer was removed!');
 });
 

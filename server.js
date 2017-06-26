@@ -86,7 +86,7 @@ app.get('/api/queue-stream', function (req, res) {
     });
 	queueConnection = res;
 	constructSSE(queueConnection, {connection: 1, customers, servedCustomers}, 'connection');
-	res.end();
+	// res.end();
 });
 
 app.use(function (req, res) {

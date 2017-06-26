@@ -10,9 +10,8 @@ var customers = [
 	{ id: uuid.v4(), name: 'Alan Turing', product: { name: 'Cryptography advice' }, joinedTime: new Date().toString() }
 ];
 
-var servedCustomers = [
-
-];
+var servedCustomers = [];
+var openConnections = [];
 
 function serveCustomer(id) {
 	// always serve the first in the queue
@@ -37,14 +36,16 @@ function removeCustomer(targetCustomerId) {
 	});
 }
 
-function constructSSE(res, data, event = 'queueUpdate') {
-	res.write('id: ' + uuid.v4() + '\n');
-	res.write('event: ' + event + '\n');
-	res.write("data: " + JSON.stringify(data) + '\n\n');
+function constructSSE(data, event = 'queueUpdate') {
+	openConnections.forEach(function(res) {
+		res.write('id: ' + uuid.v4() + '\n');
+		res.write('event: ' + event + '\n');
+		res.write("data: " + JSON.stringify(data) + '\n\n');
+	});
 }
 
 function sendQueueUpdate() {
-	constructSSE(queueConnection, {customers, servedCustomers}, 'queueUpdate');
+	constructSSE({customers, servedCustomers}, 'queueUpdate');
 }
 
 var app = express();
@@ -81,14 +82,15 @@ app.delete('/api/customer/remove', function (req, res) {
 });
 
 app.get('/api/queue-stream', function (req, res) {
+	// req.socket.setTimeout(Infinity);
 	res.writeHead(200, {
       'Connection': 'keep-alive',
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache'
     });
-	queueConnection = res;
-	constructSSE(queueConnection, {connection: 1, customers, servedCustomers}, 'connection');
-	// res.end();
+	res.write('\n');
+	openConnections.push(res);
+	constructSSE({connection: 1, customers, servedCustomers}, 'connection');
 });
 
 app.use(function (req, res) {

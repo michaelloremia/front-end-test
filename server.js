@@ -48,6 +48,13 @@ function sendQueueUpdate() {
 	constructSSE({customers, servedCustomers}, 'queueUpdate');
 }
 
+function queueStreamEnd(res) {
+	openConnections = openConnections.filter(function(_res) {
+		return res !== _res;
+	});
+	res.end();
+}
+
 var app = express();
 var queueConnection;
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -88,9 +95,15 @@ app.get('/api/queue-stream', function (req, res) {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache'
     });
+
 	res.write('\n');
 	openConnections.push(res);
 	constructSSE({connection: 1, customers, servedCustomers}, 'connection');
+
+	req.on('close', function() {
+		console.log('A connection closed...');
+		queueStreamEnd(res);
+	});
 });
 
 app.use(function (req, res) {

@@ -2,7 +2,7 @@
 
 ## queue app
 
-implement queue and system.
+implement queue system. Use SSE to update frontend with any changes to the queue.
 
 ## Installation
 

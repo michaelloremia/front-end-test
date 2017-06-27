@@ -1,7 +1,15 @@
-<div class="AddCustomer">
-	<input type="text" placeholder="Name" ng-model="name"/>
-	<select ng-options="product.name for product in products" ng-model="product">
-		<option value="">Choose Product</option>
-	</select>
-	<button ng-click="addCustomer()">Add</button>
+<div class="AddCustomer" layout-gt-xs="row">
+	<md-input-container flex-gt-xs flex="50" class="md-icon-float md-block">
+      <!-- Use floating label instead of placeholder -->
+      <label>Name</label>
+      <input ng-model="name" type="text">
+    </md-input-container>
+	<md-input-container>
+		<md-select class="md-block" ng-model="product" placeholder="Choose Product">
+			<md-option ng-repeat="product in products" ng-value="product">{{product.name}}</md-option>
+		</md-select>
+	</md-input-container>
+	<md-input-container>
+		<md-button class="md-raised md-primary" ng-click="addCustomer()">Add</md-button>
+	</md-input-container>
 </div>

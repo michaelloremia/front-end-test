@@ -20,18 +20,18 @@
 			<h2>Add Customer</h2>
 			<add-customer on-added="queue.onCustomerAdded()"></add-customer>
 
-			<h2>Queueing Customers <button ng-click="queue.serveCustomer()">Serve!</button></h2>
+			<h2>Queueing Customers <md-button ng-click="queue.serveCustomer()" class="md-primary md-raised">Serve!</md-button></h2>
 			<div flex="66" layout="column">
 				<md-card flex-m ng-repeat="customer in queue.customers">
-					<customer customer="customer" on-served="queue.onCustomerServed()" on-removed="queue.onCustomerRemoved()"></customer>
+					<customer is-served="false" customer="customer" on-served="queue.onCustomerServed()" on-removed="queue.onCustomerRemoved()"></customer>
 				</md-card>
 			</div>
 			<h2>Served customers</h2>
-			<ul>
-				<li ng-repeat="customer in queue.servedCustomers">
-					<customer customer="customer" on-served="queue.onCustomerServed()" is-served="true"></customer>
-				</li>
-			</ul>
+			<div flex="66" layout="column">
+				<md-card flex-m ng-repeat="customer in queue.servedCustomers">
+					<customer is-served="true" customer="customer" on-served="queue.onCustomerServed()" on-removed="queue.onCustomerRemoved()"></customer>
+				</md-card>
+			</div>
 		</md-content>
 	</body>
 </html>

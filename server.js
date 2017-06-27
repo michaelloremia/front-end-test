@@ -21,6 +21,7 @@ function serveCustomer(id) {
 	}
 
 	var _servedCustomer = customers.shift();
+	_servedCustomer.servedTime = new Date().toString();
 	servedCustomers.push(_servedCustomer);
 	return 'Customer was served!';
 }
@@ -28,6 +29,7 @@ function serveCustomer(id) {
 function addCustomer(customer) {
 	customer.id = uuid.v4();
 	customer.joinedTime = new Date().toString();
+	customer.servedTime = null;
 	customers.push(customer);
 }
 
